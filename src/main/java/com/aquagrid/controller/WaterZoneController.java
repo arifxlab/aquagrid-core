@@ -1,6 +1,7 @@
 package com.aquagrid.controller;
 
 import com.aquagrid.dto.WaterZoneRequest;
+import com.aquagrid.dto.WaterZoneResponse;
 import com.aquagrid.mapper.WaterZoneMapper;
 import com.aquagrid.response.ApiResponse;
 import com.aquagrid.service.WaterZoneService;
@@ -20,21 +21,21 @@ public class WaterZoneController {
     private final WaterZoneService waterZoneService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Object>> create(@Valid @RequestBody WaterZoneRequest request) {
+    public ResponseEntity<ApiResponse<WaterZoneResponse>> create(
+            @Valid @RequestBody WaterZoneRequest request) {
 
         var entity = WaterZoneMapper.toEntity(request);
         var saved = waterZoneService.createZone(entity);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ApiResponse<>(
-                        true,
+                .body(ApiResponse.success(
                         "Water zone created successfully",
                         WaterZoneMapper.toResponse(saved)
                 ));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Object>>> getAll() {
+    public ResponseEntity<ApiResponse<List<WaterZoneResponse>>> getAll() {
 
         var zones = waterZoneService.getAllZones()
                 .stream()
@@ -42,18 +43,20 @@ public class WaterZoneController {
                 .toList();
 
         return ResponseEntity.ok(
-                new ApiResponse<>(true, "All zones fetched successfully", (List) zones)
+                ApiResponse.success(
+                        "All zones fetched successfully",
+                        zones
+                )
         );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Object>> getById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<WaterZoneResponse>> getById(@PathVariable Long id) {
 
         var zone = waterZoneService.getZoneById(id);
 
         return ResponseEntity.ok(
-                new ApiResponse<>(
-                        true,
+                ApiResponse.success(
                         "Zone fetched successfully",
                         WaterZoneMapper.toResponse(zone)
                 )
@@ -61,15 +64,14 @@ public class WaterZoneController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Object>> update(
+    public ResponseEntity<ApiResponse<WaterZoneResponse>> update(
             @PathVariable Long id,
             @Valid @RequestBody WaterZoneRequest request) {
 
         var updated = waterZoneService.updateZone(id, WaterZoneMapper.toEntity(request));
 
         return ResponseEntity.ok(
-                new ApiResponse<>(
-                        true,
+                ApiResponse.success(
                         "Zone updated successfully",
                         WaterZoneMapper.toResponse(updated)
                 )
@@ -77,13 +79,12 @@ public class WaterZoneController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Object>> delete(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
 
         waterZoneService.deleteZone(id);
 
         return ResponseEntity.ok(
-                new ApiResponse<>(
-                        true,
+                ApiResponse.success(
                         "Zone deleted successfully",
                         null
                 )
