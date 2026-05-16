@@ -36,6 +36,10 @@ public class WaterZone {
     @Column(nullable = false)
     private Double waterLevel;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ZoneStatus status;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
