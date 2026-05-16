@@ -7,7 +7,6 @@ import com.aquagrid.response.ApiResponse;
 import com.aquagrid.service.WaterZoneService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,47 +17,44 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WaterZoneController {
 
-    private final WaterZoneService waterZoneService;
+    private final WaterZoneService service;
 
     @PostMapping
     public ResponseEntity<ApiResponse<WaterZoneResponse>> create(
             @Valid @RequestBody WaterZoneRequest request) {
 
-        var entity = WaterZoneMapper.toEntity(request);
-        var saved = waterZoneService.createZone(entity);
+        var saved = service.createZone(
+                WaterZoneMapper.toEntity(request)
+        );
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(
-                        "Water zone created successfully",
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Zone created successfully",
                         WaterZoneMapper.toResponse(saved)
-                ));
+                )
+        );
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<WaterZoneResponse>>> getAll() {
 
-        var zones = waterZoneService.getAllZones()
+        var list = service.getAllZones()
                 .stream()
                 .map(WaterZoneMapper::toResponse)
                 .toList();
 
         return ResponseEntity.ok(
-                ApiResponse.success(
-                        "All zones fetched successfully",
-                        zones
-                )
+                ApiResponse.success("All zones", list)
         );
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<WaterZoneResponse>> getById(@PathVariable Long id) {
 
-        var zone = waterZoneService.getZoneById(id);
-
         return ResponseEntity.ok(
                 ApiResponse.success(
-                        "Zone fetched successfully",
-                        WaterZoneMapper.toResponse(zone)
+                        "Zone found",
+                        WaterZoneMapper.toResponse(service.getZoneById(id))
                 )
         );
     }
@@ -68,11 +64,14 @@ public class WaterZoneController {
             @PathVariable Long id,
             @Valid @RequestBody WaterZoneRequest request) {
 
-        var updated = waterZoneService.updateZone(id, WaterZoneMapper.toEntity(request));
+        var updated = service.updateZone(
+                id,
+                WaterZoneMapper.toEntity(request)
+        );
 
         return ResponseEntity.ok(
                 ApiResponse.success(
-                        "Zone updated successfully",
+                        "Zone updated",
                         WaterZoneMapper.toResponse(updated)
                 )
         );
@@ -81,13 +80,10 @@ public class WaterZoneController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
 
-        waterZoneService.deleteZone(id);
+        service.deleteZone(id);
 
         return ResponseEntity.ok(
-                ApiResponse.success(
-                        "Zone deleted successfully",
-                        null
-                )
+                ApiResponse.success("Zone deleted", null)
         );
     }
 }

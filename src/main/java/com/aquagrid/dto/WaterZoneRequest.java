@@ -2,19 +2,17 @@ package com.aquagrid.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
 @Data
 public class WaterZoneRequest {
 
-    @NotBlank
+    @NotBlank(message = "Zone name is required")
     private String zoneName;
 
-    @NotBlank
+    @NotBlank(message = "City is required")
     private String city;
 
-    @NotNull
-    @PositiveOrZero
+    @NotNull(message = "Water level is required")
     private Double waterLevel;
 }

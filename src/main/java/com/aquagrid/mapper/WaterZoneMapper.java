@@ -20,8 +20,7 @@ public class WaterZoneMapper {
                 .zoneName(zone.getZoneName())
                 .city(zone.getCity())
                 .waterLevel(zone.getWaterLevel())
-                .createdAt(zone.getCreatedAt())
-                .updatedAt(zone.getUpdatedAt())
+                .status(zone.getStatus())
                 .build();
     }
 }
