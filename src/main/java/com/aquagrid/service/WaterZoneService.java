@@ -51,6 +51,15 @@ public class WaterZoneService {
         return repository.findAll();
     }
 
+    public List<WaterZone> searchByCity(String city) {
+
+        if (city == null || city.trim().isEmpty()) {
+            throw new IllegalArgumentException("City cannot be empty");
+        }
+
+        return repository.findByCity(city.trim());
+    }
+
     // =========================
     // GET BY ID
     // =========================

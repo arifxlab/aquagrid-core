@@ -62,6 +62,27 @@ public class WaterZoneController {
         );
     }
 
+     // =========================
+    // SEARCH BY CITY
+    // =========================
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<WaterZoneResponse>>> searchByCity(
+            @RequestParam String city
+    ) {
+
+        List<WaterZoneResponse> response = service.searchByCity(city)
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Zones found",
+                        response
+                )
+        );
+    }
+
     // =========================
     // GET ZONE BY ID
     // =========================
