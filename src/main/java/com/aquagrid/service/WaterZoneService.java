@@ -17,6 +17,9 @@ public class WaterZoneService {
 
     private final WaterZoneRepository repository;
 
+    // =========================
+    // STATUS CALCULATION RULES
+    // =========================
     private ZoneStatus calculateStatus(Double waterLevel) {
 
         if (waterLevel == null || waterLevel <= 40) return ZoneStatus.CRITICAL;
@@ -24,6 +27,9 @@ public class WaterZoneService {
         return ZoneStatus.ACTIVE;
     }
 
+    // =========================
+    // CREATE ZONE
+    // =========================
     @Transactional
     public WaterZone createZone(WaterZone zone) {
 
@@ -38,10 +44,16 @@ public class WaterZoneService {
         return repository.save(zone);
     }
 
+    // =========================
+    // GET ALL ZONES
+    // =========================
     public List<WaterZone> getAllZones() {
         return repository.findAll();
     }
 
+    // =========================
+    // GET BY ID
+    // =========================
     public WaterZone getZoneById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() ->
@@ -49,21 +61,44 @@ public class WaterZoneService {
                 );
     }
 
+    // =========================
+    // UPDATE ZONE (FIXED VERSION)
+    // =========================
     @Transactional
     public WaterZone updateZone(Long id, WaterZone updated) {
 
         WaterZone existing = getZoneById(id);
 
+        // ⚠️ FIX: prevent duplicate zone name on update
+        if (!existing.getZoneName().equals(updated.getZoneName())
+                && repository.existsByZoneName(updated.getZoneName())) {
+            throw new ZoneAlreadyExistsException(
+                    "Zone already exists: " + updated.getZoneName()
+            );
+        }
+
         existing.setZoneName(updated.getZoneName());
         existing.setCity(updated.getCity());
         existing.setWaterLevel(updated.getWaterLevel());
+
+        // always recalculate status
         existing.setStatus(calculateStatus(updated.getWaterLevel()));
 
         return repository.save(existing);
     }
 
+    // =========================
+    // DELETE ZONE
+    // =========================
     @Transactional
     public void deleteZone(Long id) {
         repository.delete(getZoneById(id));
+    }
+
+    // =========================
+    // NEW FEATURE: SEARCH BY CITY
+    // =========================
+    public List<WaterZone> getZonesByCity(String city) {
+        return repository.findByCity(city);
     }
 }
