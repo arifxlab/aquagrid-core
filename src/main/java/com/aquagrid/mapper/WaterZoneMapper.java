@@ -33,6 +33,11 @@ public class WaterZoneMapper {
                 .city(zone.getCity())
                 .waterLevel(zone.getWaterLevel())
                 .status(zone.getStatus())
+
+                // ✅ NEW
+                .createdAt(zone.getCreatedAt())
+                .updatedAt(zone.getUpdatedAt())
+
                 .build();
     }
 }
