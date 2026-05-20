@@ -1,7 +1,6 @@
 # AquaGrid Core 🌊
 
-AquaGrid is a backend system for water grid and GIS-based monitoring.  
-It is built using Spring Boot and PostgreSQL with a clean layered architecture.
+AquaGrid Core is a Spring Boot-based backend system for managing water distribution zones with real-time monitoring, analytics-ready structure, and enterprise-grade API design.
 
 ---
 
@@ -9,75 +8,180 @@ It is built using Spring Boot and PostgreSQL with a clean layered architecture.
 
 - Java 21
 - Spring Boot 4
-- Spring Data JPA (Hibernate)
-- PostgreSQL 16
+- Spring Data JPA
+- Spring Security
+- PostgreSQL
+- Hibernate
+- JWT (Authentication layer - in progress)
+- Swagger / OpenAPI
 - Maven
-- IntelliJ IDEA
 
 ---
 
-## 📦 Project Structure
+## 🏗 Architecture
+
+This project follows a clean layered architecture:
 
 
-com.aquagrid
-├── AquagridCoreApplication
-├── config
-├── controller
-├── dto
-├── exception
-├── model
-├── repository
-├── service
-└── util
+Controller → Service → Repository → Database
+
+
+With additional layers:
+
+- DTO Layer (Request/Response separation)
+- Mapper Layer (Entity ↔ DTO conversion)
+- Exception Handling Layer (Global errors)
+- Security Layer (JWT-based auth in progress)
+
+---
+
+## 📦 Features
+
+### ✅ Completed Features
+
+- CRUD operations for Water Zones
+- Pagination, Sorting, Filtering
+- Search by city
+- Status management (ACTIVE / WARNING / CRITICAL)
+- Duplicate zone prevention
+- Global exception handling
+- Validation (DTO-based)
+- PostgreSQL integration
+- Swagger API documentation
+- Clean REST API design
+
+---
+
+## 📡 API Endpoints
+
+### Zone APIs
+
+| Method | Endpoint |
+|--------|----------|
+| POST | `/api/zones` |
+| GET | `/api/zones` |
+| GET | `/api/zones/{id}` |
+| PUT | `/api/zones/{id}` |
+| DELETE | `/api/zones/{id}` |
+| GET | `/api/zones/search?city=` |
+| GET | `/api/zones/status/{status}` |
+
+---
+
+## 📖 Swagger UI
+
+
+http://localhost:8080/swagger-ui.html
 
 
 ---
 
-## 🧠 Current Phase
+## 🔐 Security (Upcoming)
 
-### Phase 1: Core Backend Setup
-- Spring Boot project setup
-- PostgreSQL connection
-- Basic entity creation (WaterZone)
-- Layered architecture setup
+- JWT Authentication
+- Role-based access (ADMIN / USER)
+- Secure endpoints
 
 ---
 
-## ▶️ How to Run
+## 📊 Example Response
 
-### 1. Start PostgreSQL
-Make sure database is running:
+```json
+{
+  "success": true,
+  "message": "Water zone created successfully",
+  "data": {
+    "id": 1,
+    "zoneName": "Karachi Central",
+    "city": "Karachi",
+    "waterLevel": 65,
+    "status": "WARNING"
+  }
+}
+🛠 Current Status
 
+✔ Backend fully functional
+✔ Production-style architecture
+🔄 JWT authentication in progress
+🔜 Unit testing + logging improvements
 
-jdbc:postgresql://localhost:5432/aquagrid
+🎯 Goal
 
+To build an enterprise-level backend system suitable for:
 
-### 2. Run Application
+Smart city water monitoring
+Real-time analytics systems
+Scalable microservice architecture transition
+👨‍💻 Author
 
-Run:
-
-
-AquagridCoreApplication.java
-
-
-or via terminal:
-
-
-mvn spring-boot:run
+Arif Khan (Software Engineering Student)
 
 
 ---
 
-## 📌 Next Features
+# 🧾 STEP 2 — REQUIREMENTS FILE (ADD THIS)
 
-- WaterZone CRUD APIs
-- Sensor data simulation
-- GIS-based queries (PostGIS)
-- Alert system (high water level detection)
-- Scheduling system for monitoring
+Create a new file:
+
+```text
+REQUIREMENTS.md
+
+Then add:
+
+# AquaGrid Core - Requirements
+
+## Functional Requirements
+
+### Water Zone Management
+- Create water zones
+- Update water zones
+- Delete water zones
+- Retrieve zone details
+- List all zones with pagination
+
+### Search & Filtering
+- Search zones by city
+- Filter by status (ACTIVE, WARNING, CRITICAL)
+- Sort results by fields (id, waterLevel, etc.)
+
+### Validation
+- Zone name must not be empty
+- City must not be empty
+- Water level must be within valid range
+- Duplicate zone names not allowed
 
 ---
 
-## 👨‍💻 Author
+## System Requirements
 
-Arif Khan
+- Java 21+
+- Spring Boot 4+
+- PostgreSQL 14+
+- Maven 3.8+
+
+---
+
+## API Standards
+
+- RESTful architecture
+- Standard HTTP status codes
+- Consistent response wrapper
+- JSON-based communication
+
+---
+
+## Security (Planned)
+
+- JWT authentication
+- Role-based access control
+- Secure API endpoints
+
+---
+
+## Non-Functional Requirements
+
+- Scalable architecture
+- Clean layered design
+- Maintainable code structure
+- Logging support (future)
+- Unit testing coverage (future)
