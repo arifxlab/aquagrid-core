@@ -1,0 +1,22 @@
+package com.aquagrid.controller;
+
+import com.aquagrid.dto.LoginRequest;
+import com.aquagrid.dto.LoginResponse;
+import com.aquagrid.service.AuthService;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @PostMapping("/login")
+    public LoginResponse login(@RequestBody LoginRequest request) {
+        return authService.login(request);
+    }
+}
