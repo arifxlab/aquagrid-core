@@ -1,22 +1,47 @@
 package com.aquagrid.controller;
 
+import com.aquagrid.dto.AuthResponse;
 import com.aquagrid.dto.LoginRequest;
-import com.aquagrid.dto.LoginResponse;
+import com.aquagrid.dto.RegisterRequest;
+import com.aquagrid.response.ApiResponse;
 import com.aquagrid.service.AuthService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthService service;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<Void>> register(
+            @Valid @RequestBody RegisterRequest request
+    ) {
+
+        service.register(request);
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "User registered successfully",
+                        null
+                )
+        );
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest request) {
-        return authService.login(request);
+    public ResponseEntity<ApiResponse<AuthResponse>> login(
+            @Valid @RequestBody LoginRequest request
+    ) {
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Login successful",
+                        service.login(request)
+                )
+        );
     }
 }
